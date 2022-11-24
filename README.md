@@ -1,3 +1,7 @@
+<h1 align="center">
+ <img src="logo.png" />
+</h1>
+
 <!-- ABOUT THE PROJECT -->
 # About The Project
 The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on Venom-like blockchains. Under the hood, it's a [yeoman](http://yeoman.io/) generator.
