@@ -1,0 +1,7 @@
+Description: 
+  The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on Venom-like blockchains.
+
+Subgenerators:
+  yo venom-scaffold:sample [<path>] [options] 
+  yo venom-scaffold:tip3   [<path>] [options] 
+  yo venom-scaffold:tip4-1 [<path>] [options]
