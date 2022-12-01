@@ -11,7 +11,7 @@ TIP-4 provides the following functionality:
  - transferring NFTs from one account to another
  - selling your NFTs
 
-You can find more info about TIP4 token in our [documentation](https://docs.venom.foundation/build/development-guides/how-to-create-your-own-non-fungible-tip-4-token/non-fungible-tokens-in-venom-network)
+ You can find more info about TIP4 token in our [documentation](https://docs.venom.foundation/build/development-guides/how-to-create-your-own-non-fungible-tip-4-token/non-fungible-tokens-in-venom-network). Here you can find detailed information about [TIP4-1](https://github.com/nftalliance/docs/blob/main/src/standard/TIP-4/1.md),[TIP4-2](https://github.com/nftalliance/docs/blob/main/src/standard/TIP-4/2.md), [TIP4-3](https://github.com/nftalliance/docs/blob/main/src/standard/TIP-4/3.md) standards
 
 # Table of Contents
 - [About the project](#about-the-project)
@@ -69,8 +69,8 @@ To test contracts locally, we need to run the [local node](#local-node).
 To run tests on the venom testnet, make sure you have added a giver for that network in `locklift.config.ts`.
 
 ```bash
-npx locklift test --network local
-npx locklift test --network testnet
+<%= pkgManager %> run test:local
+<%= pkgManager %> run test:testnet
 ```
 
 ## Deploy contracts

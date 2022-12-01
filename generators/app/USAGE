@@ -4,4 +4,4 @@ Description:
 Subgenerators:
   yo venom-scaffold:sample [<path>] [options] 
   yo venom-scaffold:tip3   [<path>] [options] 
-  yo venom-scaffold:tip4-1 [<path>] [options]
+  yo venom-scaffold:tip4 [<path>] [options]

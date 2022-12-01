@@ -1,5 +1,5 @@
-import * as Generator from 'yeoman-generator';
-import { validateAddress } from '../../lib/base';
+import * as Generator from "yeoman-generator";
+import { validateAddress } from "../../lib/base";
 
 interface Giver {
   type: string;
@@ -20,34 +20,35 @@ interface NetworkConfig {
 }
 
 interface Answers {
+  externalContracts: any;
   compiler: string;
   linker: string;
   networks: Map<string, NetworkConfig>;
-  blockchain: 'venom' | 'everscale';
+  blockchain: "venom" | "everscale";
 }
 
 function questionsToSettingUpNetwork(network: string) {
   return [
     {
       name: `type`,
-      type: 'list',
+      type: "list",
       message: `Select giver type (${network})`,
-      choices: ['WalletV3', 'GiverWallet'],
+      choices: ["WalletV3", "GiverWallet"],
     },
     {
       name: `address`,
-      type: 'input',
+      type: "input",
       message: `Provide giver address (${network})`,
       validate: validateAddress,
     },
     {
       name: `phrase`,
-      type: 'password',
+      type: "password",
       message: `Enter giver's seed phrase (${network})`,
     },
     {
       name: `privateKey`,
-      type: 'password',
+      type: "password",
       message: `Enter giver's privateKey (${network})`,
     },
   ];
@@ -61,50 +62,50 @@ export default class extends Generator {
   }
 
   initializing() {
-    this.destinationRoot(this.config.get('path'));
+    this.destinationRoot(this.config.get("path"));
   }
 
   async prompting() {
     this.log(
-      '\n----------------------------------------------------------------\n\tSetting up locklift\n----------------------------------------------------------------',
+      "\n----------------------------------------------------------------\n\tSetting up locklift\n----------------------------------------------------------------"
     );
     const setupLocklift = await this.prompt([
       {
-        name: 'setupLocklift',
-        type: 'confirm',
+        name: "setupLocklift",
+        type: "confirm",
         message:
-          'Set up locklift configs now? If not, you can do it manually later.',
+          "Set up locklift configs now? If not, you can do it manually later.",
         default: true,
       },
     ]);
 
     const questions = [
       {
-        name: 'compiler',
-        type: 'input',
-        message: 'Enter compiler version',
-        default: this.options.compiler || '0.62.0',
+        name: "compiler",
+        type: "input",
+        message: "Enter compiler version",
+        default: this.options.compiler || "0.62.0",
         when: setupLocklift.setupLocklift,
       },
       {
-        name: 'linker',
-        type: 'input',
-        message: 'Enter linker version',
-        default: this.options.linker || '0.15.48',
+        name: "linker",
+        type: "input",
+        message: "Enter linker version",
+        default: this.options.linker || "0.15.48",
         when: setupLocklift.setupLocklift,
       },
       {
-        name: 'blockchain',
-        type: 'list',
-        message: 'Select blockchain',
+        name: "blockchain",
+        type: "list",
+        message: "Select blockchain",
         choices: [
           {
-            name: 'Venom',
-            value: 'venom',
+            name: "Venom",
+            value: "venom",
           },
           {
-            name: 'Everscale',
-            value: 'everscale',
+            name: "Everscale",
+            value: "everscale",
           },
         ],
         when: setupLocklift.setupLocklift,
@@ -115,9 +116,9 @@ export default class extends Generator {
 
     const networkAnswers = new Map<string, NetworkConfig>();
     if (setupLocklift.setupLocklift) {
-      for await (const network of ['testnet', 'mainnet']) {
+      for await (const network of ["testnet", "mainnet"]) {
         const giverConfigAnswers = await this.prompt(
-          questionsToSettingUpNetwork(network),
+          questionsToSettingUpNetwork(network)
         );
         networkAnswers.set(network, {
           giver: {
@@ -131,6 +132,7 @@ export default class extends Generator {
     }
 
     this.answers = {
+      externalContracts: this.options.externalContracts,
       compiler: mainAnswers.compiler || this.options.compiler,
       linker: mainAnswers.linker || this.options.linker,
       networks: networkAnswers,
@@ -146,26 +148,27 @@ export default class extends Generator {
     });
 
     this.fs.copyTpl(
-      this.templatePath('locklift.config.ts'),
-      this.destinationPath('locklift.config.ts'),
+      this.templatePath("locklift.config.ts"),
+      this.destinationPath("locklift.config.ts"),
       {
+        externalContracts: this.answers.externalContracts,
         compiler: this.answers.compiler,
         linker: this.answers.linker,
         networks: this.answers.networks,
         giverTypes: giverTypes,
         blockchain: this.answers.blockchain,
-      },
+      }
     );
     this.fs.copy(
-      this.templatePath('giverSettings/'),
-      this.destinationPath('./giverSettings'),
+      this.templatePath("giverSettings/"),
+      this.destinationPath("./giverSettings")
     );
 
     const pkgJson = {
       devDependencies: {
-        chai: '^4.3.6',
+        chai: "^4.3.6",
       },
     };
-    this.fs.extendJSON(this.destinationPath('package.json'), pkgJson);
+    this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
   }
 }

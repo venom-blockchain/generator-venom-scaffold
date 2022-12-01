@@ -1,30 +1,24 @@
-import { Address, toNano, WalletTypes, zeroAddress } from 'locklift';
-import ora from 'ora';
-import prompts from 'prompts';
+import { Address, toNano, WalletTypes, zeroAddress } from "locklift";
+import ora from "ora";
+import prompts from "prompts";
 
 async function main() {
   const spinner = ora();
   const answers = await prompts([
     {
-      type: 'text',
-      name: 'collectionAddr',
-      message: 'Collection address',
+      type: "text",
+      name: "collectionAddr",
+      message: "Collection address",
       initial: zeroAddress,
     },
   ]);
-
-  if (answers.collectionAddr === zeroAddress) {
-    spinner.fail('enter valid collection address');
-    return;
-  }
   spinner.start(`Mint Nft`);
   try {
-    const signer = (await locklift.keystore.getSigner('0'))!;
-
+    const signer = (await locklift.keystore.getSigner("0"))!;
     // initialize collection contract object by locklift
     const collectionInsance = locklift.factory.getDeployedContract(
-      'Collection',
-      new Address(answers.collectionAddr),
+      "Collection",
+      new Address(answers.collectionAddr)
     );
 
     // creating new account for Collection calling (or you can get already deployed by locklift.factory.accounts.addExistingAccount)
@@ -34,16 +28,31 @@ async function main() {
         value: toNano(10),
         publicKey: signer.publicKey,
       });
+    console.log("someAccount", someAccount);
     // get current nft id (totalSupply) for future NFT address calculating
     const { count: id } = await collectionInsance.methods
       .totalSupply({ answerId: 0 })
       .call();
     spinner.succeed(`id: ${id}`);
-
-    // call mintNft function
     await collectionInsance.methods
-      .mintNft({})
-      .send({ from: someAccount.address, amount: toNano(1) });
+      .mintNft({
+        json: `{
+        "type": "Basic NFT",
+        "name": "First NFT",
+        "description": "Green guy 1",
+        "preview": {
+            "source": "https://ipfs.io/ipfs/QmRtVuN6sW7cHq9Pbu4wvtzfSJcbiCwi6qTJF71avMqEEX",
+            "mimetype": "image/png"
+        },
+        "files": [
+            {
+                "source": "https://ipfs.io/ipfs/QmRtVuN6sW7cHq9Pbu4wvtzfSJcbiCwi6qTJF71avMqEEX",
+                "mimetype": "image/png"
+            }
+        ]
+    }`,
+      })
+      .send({ from: someAccount.address, amount: toNano(2) });
 
     const { nft: nftAddress } = await collectionInsance.methods
       .nftAddress({ answerId: 0, id: id })
