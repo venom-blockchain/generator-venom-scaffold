@@ -1,12 +1,6 @@
 import { expect } from "chai";
 import { Account } from "everscale-standalone-client/nodejs";
-import {
-  Address,
-  Contract,
-  WalletTypes,
-  getRandomNonce,
-  toNano,
-} from "locklift";
+import { Address, Contract, WalletTypes, getRandomNonce, toNano } from "locklift";
 import * as nt from "nekoton-wasm";
 
 import { FactorySource } from "../build/factorySource";
@@ -28,39 +22,31 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
     });
     owner = account;
   });
+
   it("Load Collection contract factory", async function () {
     const contractData = locklift.factory.getContractArtifacts("Collection");
-    expect(contractData.code).not.to.equal(
-      undefined,
-      "Code should be available"
-    );
+    expect(contractData.code).not.to.equal(undefined, "Code should be available");
     expect(contractData.abi).not.to.equal(undefined, "ABI should be available");
     expect(contractData.tvc).not.to.equal(undefined, "tvc should be available");
   });
+
   it("Load Nft contract factory", async function () {
     const contractData = locklift.factory.getContractArtifacts("Nft");
-    expect(contractData.code).not.to.equal(
-      undefined,
-      "Code should be available"
-    );
+    expect(contractData.code).not.to.equal(undefined, "Code should be available");
     expect(contractData.abi).not.to.equal(undefined, "ABI should be available");
     expect(contractData.tvc).not.to.equal(undefined, "tvc should be available");
   });
+
   it("Load Index contract factory", async function () {
     const contractData = locklift.factory.getContractArtifacts("Index");
-    expect(contractData.code).not.to.equal(
-      undefined,
-      "Code should be available"
-    );
+    expect(contractData.code).not.to.equal(undefined, "Code should be available");
     expect(contractData.abi).not.to.equal(undefined, "ABI should be available");
     expect(contractData.tvc).not.to.equal(undefined, "tvc should be available");
   });
+
   it("Load IndexBasis contract factory", async function () {
     const contractData = locklift.factory.getContractArtifacts("IndexBasis");
-    expect(contractData.code).not.to.equal(
-      undefined,
-      "Code should be available"
-    );
+    expect(contractData.code).not.to.equal(undefined, "Code should be available");
     expect(contractData.abi).not.to.equal(undefined, "ABI should be available");
     expect(contractData.tvc).not.to.equal(undefined, "tvc should be available");
   });
@@ -69,9 +55,7 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
     this.timeout(60000);
     const Nft = locklift.factory.getContractArtifacts("Nft");
     const Index = await locklift.factory.getContractArtifacts("Index");
-    const IndexBasis = await locklift.factory.getContractArtifacts(
-      "IndexBasis"
-    );
+    const IndexBasis = await locklift.factory.getContractArtifacts("IndexBasis");
     const signer = (await locklift.keystore.getSigner("0"))!;
 
     const { contract } = await locklift.factory.deployContract({
@@ -105,9 +89,7 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
     });
     collection = contract;
 
-    const { count: id } = await collection.methods
-      .totalSupply({ answerId: 0 })
-      .call();
+    const { count: id } = await collection.methods.totalSupply({ answerId: 0 }).call();
 
     expect(id).equal("0", "Amount of NFT in collection should be 0");
   });
@@ -134,13 +116,9 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
     }`,
       })
       .send({ from: owner.address, amount: locklift.utils.toNano(2) });
-    const { count: id } = await collection.methods
-      .totalSupply({ answerId: 0 })
-      .call();
+    const { count: id } = await collection.methods.totalSupply({ answerId: 0 }).call();
 
-    const { nft: nftAddress } = await collection.methods
-      .nftAddress({ answerId: 0, id: id })
-      .call();
+    const { nft: nftAddress } = await collection.methods.nftAddress({ answerId: 0, id: id }).call();
     nft1Address = nftAddress;
     expect(id).equal("1", "NFT id should be 1");
   });
@@ -167,13 +145,9 @@ describe("Test NFT Collection deployment and NFT minting", async function () {
     }`,
       })
       .send({ from: owner.address, amount: locklift.utils.toNano(2) });
-    const { count: id } = await collection.methods
-      .totalSupply({ answerId: 0 })
-      .call();
+    const { count: id } = await collection.methods.totalSupply({ answerId: 0 }).call();
 
-    const { nft: nftAddress } = await collection.methods
-      .nftAddress({ answerId: 0, id: id })
-      .call();
+    const { nft: nftAddress } = await collection.methods.nftAddress({ answerId: 0, id: id }).call();
     nft2Address = nftAddress;
 
     expect(id).equal("2", "NFT id should be 2");

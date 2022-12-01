@@ -1,4 +1,4 @@
-import { Address, toNano, WalletTypes, zeroAddress } from "locklift";
+import { Address, toNano, WalletTypes } from "locklift";
 import ora from "ora";
 import prompts from "prompts";
 
@@ -9,7 +9,6 @@ async function main() {
       type: "text",
       name: "collectionAddr",
       message: "Collection address",
-      initial: zeroAddress,
     },
   ]);
   spinner.start(`Mint Nft`);
@@ -28,7 +27,7 @@ async function main() {
         value: toNano(10),
         publicKey: signer.publicKey,
       });
-    console.log("someAccount", someAccount);
+
     // get current nft id (totalSupply) for future NFT address calculating
     const { count: id } = await collectionInsance.methods
       .totalSupply({ answerId: 0 })

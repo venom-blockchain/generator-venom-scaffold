@@ -1,13 +1,13 @@
 import BaseGenerator from "../../lib/base";
 
 export default class AppGenerator extends BaseGenerator {
-  answers: { template: "sample" | "tip3" | "tip4" | "empty" };
+  answers: { template: "sample" | "tip3" | "tip4" };
   constructor(args, options) {
     super(args, options);
     this.option("template", {
       type: String,
       alias: "t",
-      description: `Template to create project: 'sample' | 'tip3' | 'tip4' | 'empty'`,
+      description: `Template to create project: 'sample' | 'tip3' | 'tip4'`,
     });
     if (this.options.help) {
       return;
@@ -20,7 +20,7 @@ export default class AppGenerator extends BaseGenerator {
 
   async prompting() {
     this.log(
-      `\n----------------------------------------------------------------\n\tSelect project template\n----------------------------------------------------------------`
+      `\n----------------------------------------------------------------\n\tSelect project template\n----------------------------------------------------------------`,
     );
     const questions = [
       {
@@ -32,10 +32,6 @@ export default class AppGenerator extends BaseGenerator {
           { name: "Sample project", value: "sample" },
           { name: "Fungible token (TIP3)", value: "tip3" },
           { name: "Non fungible token (TIP4)", value: "tip4" },
-          {
-            name: "Create locklift config without any templates (empty)",
-            value: "empty",
-          },
         ],
         when: !this.options.template,
       },

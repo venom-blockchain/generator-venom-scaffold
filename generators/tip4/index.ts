@@ -22,7 +22,8 @@ export default class TIP41 extends BaseGenerator {
       this.initialize();
     }
     if (this.options.locklift) {
-      this.options.externalContracts = true;
+      this.options.lockliftConfigPath = this.templatePath("locklift.config.ts");
+      console.log("lockliftConfigPath", this.options.lockliftConfigPath);
       this.composeWith(require.resolve("../locklift"), this.options);
     }
     this.pkgJSONGenerator = new PkgJSONGenerator(this.args, this.options);
@@ -36,15 +37,9 @@ export default class TIP41 extends BaseGenerator {
 
     const pkgJson = {
       devDependencies: {
-        "@types/chai": "^4.3.3",
-        "@types/mocha": "^10.0.0",
-        "@types/node": "^18.7.23",
-        chai: "^4.3.6",
-        prettier: "^2.7.1",
-        "ts-mocha": "^10.0.0",
-        ora: "^4.0.0",
+        "@types/node": "^18.11.10",
+        prettier: "^2.8.0",
         typescript: "^4.7.4",
-        prompts: "^2.4.2",
       },
       dependencies: {
         "@itgold/everscale-tip": "^1.1.4",
@@ -55,48 +50,31 @@ export default class TIP41 extends BaseGenerator {
       const pkgJsonScripts = {
         scripts: {
           build: "npx locklift build",
-          "run:local-node":
-            "docker run --rm -d --name local-node -e USER_AGREEMENT=yes -p 80:80 tonlabs/local-node",
+          "run:local-node": "docker run --rm -d --name local-node -e USER_AGREEMENT=yes -p 80:80 tonlabs/local-node",
           "stop:local-node": "docker stop local-node",
           "test:local": "npx locklift test --network local",
           "test:testnet": "npx locklift test --network testnet",
-          "deploy:testnet":
-            "npx locklift run --network testnet --script scripts/0-deploy-collection.ts",
-          "mint:testnet":
-            "npx locklift run --network testnet --script scripts/1-mint-nft.ts",
-          "deploy:mainnet":
-            "npx locklift run --network mainnet --script scripts/0-deploy-collection.ts",
-          "mint:mainnet":
-            "npx locklift run --network mainnet --script scripts/1-mint-nft.ts",
+          "deploy:testnet": "npx locklift run --network testnet --script scripts/0-deploy-collection.ts",
+          "mint:testnet": "npx locklift run --network testnet --script scripts/1-mint-nft.ts",
+          "deploy:mainnet": "npx locklift run --network mainnet --script scripts/0-deploy-collection.ts",
+          "mint:mainnet": "npx locklift run --network mainnet --script scripts/1-mint-nft.ts",
         },
         devDependencies: {
-          "everscale-standalone-client": "^2.1.1",
-          locklift: "^2.2.3",
+          "@types/prompts": "^2.4.1",
+          prompts: "^2.4.2",
+          ora: "^4.0.0",
         },
       };
       this.fs.extendJSON(this.destinationPath("package.json"), pkgJsonScripts);
-      this.fs.copyTpl(
-        this.templatePath("./scripts/"),
-        this.destinationPath("./scripts")
-      );
-      this.fs.copyTpl(
-        this.templatePath("./test/"),
-        this.destinationPath("./test")
-      );
+      this.fs.copyTpl(this.templatePath("./scripts/"), this.destinationPath("./scripts"));
+      this.fs.copyTpl(this.templatePath("./test/"), this.destinationPath("./test"));
     }
-    this.fs.copy(
-      this.templatePath("contracts/"),
-      this.destinationPath("./contracts")
-    );
-    this.fs.copyTpl(
-      this.templatePath("README.md"),
-      this.destinationPath("README.md"),
-      { pkgManager: this.pkgJSONGenerator.pkgManager }
-    );
-    this.fs.copyTpl(
-      this.templatePath("tsconfig.json"),
-      this.destinationPath("tsconfig.json")
-    );
+    this.fs.copy(this.templatePath("contracts/"), this.destinationPath("./contracts"));
+    this.fs.copyTpl(this.templatePath("README.md"), this.destinationPath("README.md"), {
+      pkgManager: this.pkgJSONGenerator.pkgManager,
+    });
+    this.fs.copyTpl(this.templatePath("tsconfig.json"), this.destinationPath("tsconfig.json"));
+    this.fs.copyTpl(this.templatePath(".prettierrc"), this.destinationPath(".prettierrc"));
   }
   async install() {
     await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["install"]);
@@ -104,18 +82,12 @@ export default class TIP41 extends BaseGenerator {
 
   async end() {
     if (this.options.locklift) {
-      await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, [
-        "run",
-        "build",
-      ]);
+      await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
-    const readmePath = this._findRelativePath(
-      this.env.cwd,
-      this.destinationPath("README.md")
-    );
+    const readmePath = this._findRelativePath(this.env.cwd, this.destinationPath("README.md"));
 
     this.log(
-      `\n----------------------------------------------------------------\n\tCongrats! The project was created.\nPlease, follow the instructions in README.md to find the next steps.\nYou can find README at: ${readmePath}\n----------------------------------------------------------------`
+      `\n----------------------------------------------------------------\n\tCongrats! The project was created.\nPlease, follow the instructions in README.md to find the next steps.\nYou can find README at: ${readmePath}\n----------------------------------------------------------------`,
     );
   }
 }

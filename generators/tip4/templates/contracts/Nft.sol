@@ -6,8 +6,8 @@ pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
 
-import '@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Nft.sol';
-import '@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Nft.sol';
+import "@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Nft.sol";
+import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Nft.sol";
 
 contract Nft is TIP4_2Nft, TIP4_3Nft {
 

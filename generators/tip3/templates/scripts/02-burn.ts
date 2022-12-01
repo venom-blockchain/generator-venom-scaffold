@@ -1,44 +1,37 @@
-import { Address, WalletTypes, zeroAddress } from 'locklift';
-import ora from 'ora';
-import prompts from 'prompts';
-import BigNumber from 'bignumber.js';
+import BigNumber from "bignumber.js";
+import { Address, WalletTypes } from "locklift";
+import ora from "ora";
+import prompts from "prompts";
 
 async function main() {
   const spinner = ora();
   const answers = await prompts([
     {
-      type: 'text',
-      name: 'contractAddress',
-      message: 'Contract address',
-      initial: zeroAddress,
+      type: "text",
+      name: "contractAddress",
+      message: "Contract address",
     },
     {
-      type: 'number',
-      name: 'burnAmount',
-      message: 'Burn amount',
+      type: "number",
+      name: "burnAmount",
+      message: "Burn amount",
     },
     {
-      type: 'text',
-      name: 'tokensOwnerAddress',
-      message: 'Tokens owner address',
+      type: "text",
+      name: "tokensOwnerAddress",
+      message: "Tokens owner address",
     },
     {
-      type: 'text',
-      name: 'tokensOwnerPublicKey',
-      message: 'Tokens owner public key',
+      type: "text",
+      name: "tokensOwnerPublicKey",
+      message: "Tokens owner public key",
     },
   ]);
   spinner.start(`Burn tokens...`);
   try {
-    const tokenRoot = locklift.factory.getDeployedContract(
-      'TokenRoot',
-      new Address(answers.contractAddress),
-    );
+    const tokenRoot = locklift.factory.getDeployedContract("TokenRoot", new Address(answers.contractAddress));
 
-    const { value0: decimals } = await tokenRoot.methods
-      .decimals({ answerId: 0 })
-      .call();
-    console.log('decimals', decimals);
+    const { value0: decimals } = await tokenRoot.methods.decimals({ answerId: 0 }).call();
 
     const sender = await locklift.factory.accounts.addExistingAccount({
       publicKey: answers.tokensOwnerPublicKey,
@@ -46,10 +39,10 @@ async function main() {
     });
     const tx = await tokenRoot.methods
       .burnTokens({
-        amount: new BigNumber(answers.burnAmount).shiftedBy(decimals).toFixed(),
+        amount: new BigNumber(answers.burnAmount).shiftedBy(Number(decimals)).toFixed(),
         walletOwner: new Address(answers.tokensOwnerAddress),
         callbackTo: new Address(answers.tokensOwnerAddress),
-        payload: '',
+        payload: "",
         remainingGasTo: sender.address,
       })
       .send({

@@ -58,8 +58,8 @@ To test contracts locally, we need to run the [local node](#local-node).
 To run tests on the venom testnet, make sure you have added a giver for that network in `locklift.config.ts`.
 
 ```bash
-npx locklift test --network local
-npx locklift test --network testnet
+<%= pkgManager %> run test:local
+<%= pkgManager %> run test:testnet
 ```
 
 ## Deploy
@@ -72,7 +72,7 @@ npx locklift test --network testnet
 ```
 
 ### Local node
-[Local node](https://hub.docker.com/r/tonlabs/local-node). is a pre-configured Docker image with a Ganache-like local blockchain that is designed for dapp debugging and testing. 
+[Local node](https://hub.docker.com/r/tonlabs/local-node) is a pre-configured Docker image with a Ganache-like local blockchain designed for dapp debugging and testing. 
 
 Container exposes the specified 80 port with nginx which proxies requests to /graphql to GraphQL API. You can access graphql endpoint at `http://localhost/graphql`
 

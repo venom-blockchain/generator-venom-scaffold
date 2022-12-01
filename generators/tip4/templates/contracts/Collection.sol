@@ -5,10 +5,11 @@ pragma AbiHeader time;
 pragma AbiHeader pubkey;
 
 
-import '@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Collection.sol';
-import '@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Collection.sol';
-import '@itgold/everscale-tip/contracts/access/OwnableExternal.sol';
-import './Nft.sol';
+import "@itgold/everscale-tip/contracts/TIP4_2/TIP4_2Collection.sol";
+import "@itgold/everscale-tip/contracts/TIP4_3/TIP4_3Collection.sol";
+import "@itgold/everscale-tip/contracts/access/OwnableExternal.sol";
+import "./Nft.sol";
+
 
 contract Collection is TIP4_2Collection, TIP4_3Collection, OwnableExternal {
 

@@ -19,7 +19,7 @@ async function main() {
     const IndexBasis = await locklift.factory.getContractArtifacts(
       "IndexBasis"
     );
-    console.log("IndexBasis.code", IndexBasis.code);
+
     const signer = (await locklift.keystore.getSigner("0"))!;
     const { contract: collection, tx } = await locklift.factory.deployContract({
       contract: "Collection",

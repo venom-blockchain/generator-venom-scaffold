@@ -86,8 +86,8 @@ To test contracts locally, we need to run the [local node](#local-node).
 To run tests on the venom testnet, ensure you have added a giver for that network in `locklift.config.ts`.
 
 ```bash
-npx locklift test --network local
-npx locklift test --network testnet
+<%= pkgManager %> run test:local
+<%= pkgManager %> run test:testnet
 ```
 
 ## Deploy contracts

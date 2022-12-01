@@ -1,6 +1,5 @@
-import { zeroAddress } from "locklift";
-import BigNumber from "bignumber.js"
-
+import BigNumber from "bignumber.js";
+import { Address, zeroAddress } from "locklift";
 
 const ROOT_OWNER_ADDRESS = "<%= props.rootOwnerAddress %>";
 const REMAINING_GAS_TO = "<%= props.remainingGasTo %>";
@@ -19,30 +18,27 @@ async function main() {
   const signer = (await locklift.keystore.getSigner("0"))!;
   const tokenWalletContract = locklift.factory.getContractArtifacts("TokenWallet");
 
-  const initParams = {
-    name_: NAME,
-    symbol_: SYMBOL,
-    decimals_: DECIMALS,
-    rootOwner_: ROOT_OWNER_ADDRESS,
-    walletCode_: tokenWalletContract.code,
-    randomNonce_: locklift.utils.getRandomNonce(),
-    deployer_: zeroAddress.toString(),
-  };
-  const constructorParams = {
-    initialSupplyTo: INITIAL_SUPPLY_TO,
-    initialSupply: new BigNumber(INITIAL_SUPPLY).shiftedBy(DECIMALS).toFixed(),
-    deployWalletValue: locklift.utils.toNano(2),
-    mintDisabled: DISABLE_MINT,
-    burnByRootDisabled: DISABLE_BURN_BY_ROOT,
-    burnPaused: PAUSE_BURN,
-    remainingGasTo: REMAINING_GAS_TO,
-  };
-
-  const { contract: tokenRoot, tx } = await locklift.factory.deployContract({
+  const { contract: tokenRoot } = await locklift.factory.deployContract({
     contract: "TokenRoot",
     publicKey: signer.publicKey,
-    initParams,
-    constructorParams,
+    initParams: {
+      name_: NAME,
+      symbol_: SYMBOL,
+      decimals_: DECIMALS,
+      rootOwner_: new Address(ROOT_OWNER_ADDRESS),
+      walletCode_: tokenWalletContract.code,
+      randomNonce_: locklift.utils.getRandomNonce(),
+      deployer_: zeroAddress,
+    },
+    constructorParams: {
+      initialSupplyTo: new Address(INITIAL_SUPPLY_TO),
+      initialSupply: new BigNumber(INITIAL_SUPPLY).shiftedBy(DECIMALS).toFixed(),
+      deployWalletValue: locklift.utils.toNano(2),
+      mintDisabled: DISABLE_MINT,
+      burnByRootDisabled: DISABLE_BURN_BY_ROOT,
+      burnPaused: PAUSE_BURN,
+      remainingGasTo: new Address(REMAINING_GAS_TO),
+    },
     value: locklift.utils.toNano(4),
   });
 

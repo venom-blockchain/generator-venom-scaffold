@@ -67,14 +67,13 @@ export default class extends Generator {
 
   async prompting() {
     this.log(
-      "\n----------------------------------------------------------------\n\tSetting up locklift\n----------------------------------------------------------------"
+      "\n----------------------------------------------------------------\n\tSetting up locklift\n----------------------------------------------------------------",
     );
     const setupLocklift = await this.prompt([
       {
         name: "setupLocklift",
         type: "confirm",
-        message:
-          "Set up locklift configs now? If not, you can do it manually later.",
+        message: "Set up locklift configs now? If not, you can do it manually later.",
         default: true,
       },
     ]);
@@ -117,9 +116,7 @@ export default class extends Generator {
     const networkAnswers = new Map<string, NetworkConfig>();
     if (setupLocklift.setupLocklift) {
       for await (const network of ["testnet", "mainnet"]) {
-        const giverConfigAnswers = await this.prompt(
-          questionsToSettingUpNetwork(network)
-        );
+        const giverConfigAnswers = await this.prompt(questionsToSettingUpNetwork(network));
         networkAnswers.set(network, {
           giver: {
             address: giverConfigAnswers.address,
@@ -146,27 +143,25 @@ export default class extends Generator {
     this.answers.networks.forEach((v: NetworkConfig) => {
       giverTypes.indexOf(v.giver.type) === -1 && giverTypes.push(v.giver.type);
     });
+    const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
 
-    this.fs.copyTpl(
-      this.templatePath("locklift.config.ts"),
-      this.destinationPath("locklift.config.ts"),
-      {
-        externalContracts: this.answers.externalContracts,
-        compiler: this.answers.compiler,
-        linker: this.answers.linker,
-        networks: this.answers.networks,
-        giverTypes: giverTypes,
-        blockchain: this.answers.blockchain,
-      }
-    );
-    this.fs.copy(
-      this.templatePath("giverSettings/"),
-      this.destinationPath("./giverSettings")
-    );
+    this.fs.copyTpl(this.templatePath(lockliftConfigPath), this.destinationPath("locklift.config.ts"), {
+      compiler: this.answers.compiler,
+      linker: this.answers.linker,
+      networks: this.answers.networks,
+      giverTypes: giverTypes,
+      blockchain: this.answers.blockchain,
+    });
+    this.fs.copy(this.templatePath("giverSettings/"), this.destinationPath("./giverSettings"));
 
     const pkgJson = {
       devDependencies: {
+        "@types/chai": "^4.3.4",
+        "@types/mocha": "^10.0.1",
         chai: "^4.3.6",
+        "everscale-standalone-client": "^2.1.5",
+        locklift: "^2.4.4",
+        "ts-mocha": "^10.0.0",
       },
     };
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
