@@ -114,7 +114,7 @@ Options:
         --config         # Path to the config file
         --locklift       # Use Locklift as a development environment?                        Default: true
         --pkg-manager    # Package manager to use (npm|yarn)
-  -t,   --template       # Template to create project: 'sample' | 'tip3' | 'tip4' | 'empty'
+  -t,   --template       # Template to create project: 'sample' | 'tip3' | 'tip4'
 
 Arguments:
   path  # Path to the project folder  Type: String  Required: false
