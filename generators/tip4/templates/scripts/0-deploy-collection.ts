@@ -16,9 +16,7 @@ async function main() {
   try {
     const Nft = await locklift.factory.getContractArtifacts("Nft");
     const Index = await locklift.factory.getContractArtifacts("Index");
-    const IndexBasis = await locklift.factory.getContractArtifacts(
-      "IndexBasis"
-    );
+    const IndexBasis = await locklift.factory.getContractArtifacts("IndexBasis");
 
     const signer = (await locklift.keystore.getSigner("0"))!;
     const { contract: collection, tx } = await locklift.factory.deployContract({
@@ -60,7 +58,7 @@ async function main() {
 
 main()
   .then(() => process.exit(0))
-  .catch((e) => {
+  .catch(e => {
     console.log(e);
     process.exit(1);
   });

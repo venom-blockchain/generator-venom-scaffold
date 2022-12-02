@@ -138,7 +138,7 @@ export default class extends Generator {
   }
 
   writing() {
-    let giverTypes = [];
+    const giverTypes = [];
 
     this.answers.networks.forEach((v: NetworkConfig) => {
       giverTypes.indexOf(v.giver.type) === -1 && giverTypes.push(v.giver.type);

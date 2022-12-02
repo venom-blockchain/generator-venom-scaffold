@@ -91,8 +91,8 @@ export class PkgJSONGenerator extends Generator {
     ];
   }
   _notAnsweredQuestions(): Generator.Questions<Generator.Answers> {
-    let allQuestions = this._allQuestions();
-    let questions = [];
+    const allQuestions = this._allQuestions();
+    const questions = [];
     for (const q in allQuestions) {
       if (Object.prototype.hasOwnProperty.call(allQuestions, q)) {
         const element = allQuestions[q];

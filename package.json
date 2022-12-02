@@ -1,33 +1,41 @@
 {
-    "name": "generator-venom-scaffold",
-    "version": "0.1.0",
-    "description": "Yeoman generator to scaffold ready-to-use projects for smart contract developing on Venom-like blockchains.",
-    "homepage": "https://github.com/venom-blockchain/generator-venom-scaffold",
-    "files": [
-        "src"
-    ],
-    "bin": "dist/generators/app/index.js",
-    "keywords": [
-        "yeoman-generator",
-        "venom"
-    ],
-    "scripts": {
-        "build": "npm run compile && npm run copy-files",
-        "compile": "tsc -p .",
-        "copy-files": "cpy \"generators/**/templates/**\" dist/generators/",
-        "clean": "rimraf dist"
-    },
-    "devDependencies": {
-        "@types/validate-npm-package-name": "^4.0.0",
-        "@types/yeoman-generator": "^5.2.11",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.9.3",
-        "cpy-cli": "4.2.0",
-        "path": "^0.12.7",
-        "validate-npm-package-name": "^5.0.0",
-        "yeoman-generator": "^5.7.0"
-    },
-    "engines": {
-        "npm": ">= 4.0.0"
-    }
+  "name": "generator-venom-scaffold",
+  "version": "0.1.0",
+  "description": "Yeoman generator to scaffold ready-to-use projects for smart contract developing on Venom-like blockchains.",
+  "homepage": "https://github.com/venom-blockchain/generator-venom-scaffold",
+  "files": [
+    "src"
+  ],
+  "bin": "dist/generators/app/index.js",
+  "keywords": [
+    "yeoman-generator",
+    "venom"
+  ],
+  "scripts": {
+    "build": "npm run compile && npm run copy-files",
+    "compile": "tsc -p .",
+    "copy-files": "cpy \"generators/**/templates/**\" dist/generators/",
+    "format": "prettier --write .",
+    "lint": "npx eslint .",
+    "clean": "rimraf ./dist",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/validate-npm-package-name": "^4.0.0",
+    "@types/yeoman-generator": "^5.2.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "cpy-cli": "4.2.0",
+    "eslint": "^8.28.0",
+    "husky": "^8.0.2",
+    "path": "^0.12.7",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.9.3",
+    "validate-npm-package-name": "^5.0.0",
+    "yeoman-generator": "^5.7.0"
+  },
+  "engines": {
+    "npm": ">= 4.0.0"
+  }
 }

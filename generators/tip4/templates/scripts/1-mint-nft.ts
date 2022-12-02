@@ -15,23 +15,17 @@ async function main() {
   try {
     const signer = (await locklift.keystore.getSigner("0"))!;
     // initialize collection contract object by locklift
-    const collectionInsance = locklift.factory.getDeployedContract(
-      "Collection",
-      new Address(answers.collectionAddr)
-    );
+    const collectionInsance = locklift.factory.getDeployedContract("Collection", new Address(answers.collectionAddr));
 
     // creating new account for Collection calling (or you can get already deployed by locklift.factory.accounts.addExistingAccount)
-    const { account: someAccount } =
-      await locklift.factory.accounts.addNewAccount({
-        type: WalletTypes.WalletV3,
-        value: toNano(10),
-        publicKey: signer.publicKey,
-      });
+    const { account: someAccount } = await locklift.factory.accounts.addNewAccount({
+      type: WalletTypes.WalletV3,
+      value: toNano(10),
+      publicKey: signer.publicKey,
+    });
 
     // get current nft id (totalSupply) for future NFT address calculating
-    const { count: id } = await collectionInsance.methods
-      .totalSupply({ answerId: 0 })
-      .call();
+    const { count: id } = await collectionInsance.methods.totalSupply({ answerId: 0 }).call();
     spinner.succeed(`id: ${id}`);
     await collectionInsance.methods
       .mintNft({
@@ -53,9 +47,7 @@ async function main() {
       })
       .send({ from: someAccount.address, amount: toNano(2) });
 
-    const { nft: nftAddress } = await collectionInsance.methods
-      .nftAddress({ answerId: 0, id: id })
-      .call();
+    const { nft: nftAddress } = await collectionInsance.methods.nftAddress({ answerId: 0, id: id }).call();
 
     spinner.succeed(`NFT: ${nftAddress.toString()}`);
   } catch (err) {
@@ -66,7 +58,7 @@ async function main() {
 
 main()
   .then(() => process.exit(0))
-  .catch((e) => {
+  .catch(e => {
     console.log(e);
     process.exit(1);
   });

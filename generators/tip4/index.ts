@@ -8,12 +8,12 @@ export default class TIP41 extends BaseGenerator {
     this.option("compiler", {
       type: String,
       default: "0.58.1",
-      description: `Compiler version`,
+      description: "Compiler version",
     });
     this.option("linker", {
       type: String,
       default: "0.15.48",
-      description: `Linker version`,
+      description: "Linker version",
     });
   }
 
