@@ -1,10 +1,13 @@
-<h1 align="center">
- <img src="https://raw.githubusercontent.com/venom-blockchain/generator-venom-scaffold/main/logo.png" />
-</h1>
+<p align="center">
+  <a href="https://github.com/venom-blockchain/developer-program">
+    <img src="https://raw.githubusercontent.com/venom-blockchain/developer-program/main/vf-dev-program.png" alt="Logo" width="366.8" height="146.4">
+  </a>
+</p>
+
 
 <!-- ABOUT THE PROJECT -->
 
-# About The Project
+# About The Venom Scaffold
 
 The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on Venom-like blockchains. Under the hood, it's a [yeoman](http://yeoman.io/) generator.
 
