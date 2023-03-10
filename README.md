@@ -8,7 +8,7 @@
 
 # About The Venom Scaffold
 
-The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on Venom-like blockchains. Under the hood, it's a [yeoman](http://yeoman.io/) generator.
+The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on TVM-based blockchains. Under the hood, it's a [yeoman](http://yeoman.io/) generator.
 
 You can find a list of available templates running:
 
@@ -119,7 +119,7 @@ Arguments:
   path  # Path to the project folder  Type: String  Required: false
 
 Description:
-  The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on Venom-like blockchains.
+  The Venom scaffold is inspired by the Truffle boxes and aims to help users create a project ready to test, deploy, and execute arbitrary scripts to develop smart contracts on TVM-based blockchains.
 
 Subgenerators:
   yo venom-scaffold:sample [<path>] [options]
