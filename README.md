@@ -4,7 +4,6 @@
   </a>
 </p>
 
-
 <!-- ABOUT THE PROJECT -->
 
 # About The Venom Scaffold
@@ -27,7 +26,7 @@ To create your first project, we have a [tutorial](#tip3-tutorial). Follow the i
 
 # Table of Contents
 
-- [About The Project](#about-the-project)
+- [About The Venom Scaffold](#about-the-venom-scaffold)
 - [Table of Contents](#table-of-contents)
 - [Installation](#installation)
 - [Usage](#usage)
