@@ -1,6 +1,6 @@
 {
   "name": "generator-venom-scaffold",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Yeoman generator to scaffold ready-to-use projects for smart contract developing on Venom-like blockchains.",
   "homepage": "https://github.com/venom-blockchain/generator-venom-scaffold",
   "files": [
