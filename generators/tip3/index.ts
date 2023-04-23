@@ -1,5 +1,6 @@
 import BaseGenerator, { PkgJSONGenerator, validateAddress } from "../../lib/base";
 import * as Generator from "yeoman-generator";
+import * as fs from "fs";
 
 export default class TIP3 extends BaseGenerator {
   answers: any;
@@ -69,6 +70,7 @@ export default class TIP3 extends BaseGenerator {
         message: "Enter the address of the contract root owner",
         validate: validateAddress,
         when: !this.options.rootOwnerAddress,
+        default: "0:0000000000000000000000000000000000000000000000000000000000000000",
       },
       {
         name: "tokenName",
@@ -105,6 +107,7 @@ export default class TIP3 extends BaseGenerator {
         message: "Enter the address to send initially minted tokens",
         validate: validateAddress,
         when: !this.options.initialSupplyTo,
+        default: "0:0000000000000000000000000000000000000000000000000000000000000000",
       },
       {
         name: "disableMint",
@@ -123,8 +126,7 @@ export default class TIP3 extends BaseGenerator {
       {
         name: "pauseBurn",
         type: "confirm",
-        message:
-          "Pause ability to burn tokens? Pause ability to burn tokens? Available only if tokens burning were enabled in the previous step",
+        message: "Pause ability to burn tokens? Available only if tokens burning were enabled in the previous step",
         default: false,
         when: !this.options.pauseBurn,
       },
@@ -134,6 +136,7 @@ export default class TIP3 extends BaseGenerator {
         message: "Enter the address to send the remaining gas",
         validate: validateAddress,
         when: !this.options.remainingGasTo,
+        default: "0:0000000000000000000000000000000000000000000000000000000000000000",
       },
     ];
   }
@@ -143,6 +146,7 @@ export default class TIP3 extends BaseGenerator {
       this.initialize();
     }
     if (this.options.locklift) {
+      this.options.externalContracts = "tip3";
       this.composeWith(require.resolve("../locklift"), this.options);
     }
     this.pkgJSONGenerator = new PkgJSONGenerator(this.args, this.options);
@@ -178,14 +182,14 @@ export default class TIP3 extends BaseGenerator {
 
     const pkgJson = {
       devDependencies: {
-        "@broxus/contracts": "^1.0.4",
-        "@types/node": "^18.11.10",
+        "@types/node": "^18.16.0",
         prettier: "^2.8.0",
         typescript: "^4.7.4",
+        tip3: "git://github.com/broxus/tip3#v5",
       },
     };
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
-    this.fs.copy(this.templatePath("contracts/"), this.destinationPath("./contracts"));
+    fs.mkdirSync(this.destinationPath("./contracts"));
     this.fs.copyTpl(this.templatePath("README.md"), this.destinationPath("README.md"), {
       pkgManager: this.pkgJSONGenerator.pkgManager,
     });
@@ -198,13 +202,10 @@ export default class TIP3 extends BaseGenerator {
           "run:local-node": "docker run --rm -d --name local-node -e USER_AGREEMENT=yes -p 80:80 tonlabs/local-node",
           "stop:local-node": "docker stop local-node",
           "test:local": "npx locklift test --network local",
-          "test:testnet": "npx locklift test --network testnet",
-          "deploy:testnet": "npx locklift run --network testnet --script scripts/00-deploy.ts",
-          "deploy:mainnet": "npx locklift run --network mainnet --script scripts/00-deploy.ts",
-          "mint:testnet": "npx locklift run --network testnet --script scripts/01-mint.ts",
-          "mint:mainnet": "npx locklift run --network mainnet --script scripts/01-mint.ts",
-          "burn:testnet": "npx locklift run --network testnet --script scripts/02-burn.ts",
-          "burn:mainnet": "npx locklift run --network mainnet --script scripts/02-burn.ts",
+          "test:testnet": "npx locklift test --network test",
+          "deploy:testnet": "npx locklift run --network test --script scripts/00-deploy.ts",
+          "mint:testnet": "npx locklift run --network test --script scripts/01-mint.ts",
+          "burn:testnet": "npx locklift run --network test --script scripts/02-burn.ts",
         },
         devDependencies: {
           "@types/prompts": "^2.4.1",
@@ -231,7 +232,9 @@ export default class TIP3 extends BaseGenerator {
 
   async end() {
     if (this.options.locklift) {
-      await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
+      const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
+      this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
+      this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
 
     const readmePath = this._findRelativePath(this.env.cwd, this.destinationPath("README.md"));

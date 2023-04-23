@@ -24,7 +24,6 @@ You can find more info about TIP3 token in our [documentation](https://docs.veno
 - [Table of Contents](#table-of-contents)
 - [Project structure](#project-structure)
   - [`./contracts`](#contracts)
-  - [`./giverSettings`](#giversettings)
   - [`locklift.config.ts`](#lockliftconfigts)
   - [`scripts`](#scripts)
   - [`test`](#test)
@@ -44,10 +43,6 @@ Below you will find info about the project structure and the purpose of the main
 
 Directory for smart contracts.
 
-## `./giverSettings`
-
-Directory where you can set up your custom giver type or use one of the defaults. Giver - it's an account that you will use to fund your smart contracts. There are several types of givers that you can use (SimpleWallet, GiverWallet, WalletV3). You can create your giver type. To do this, you should deploy a contract that implements `Giver interface`.
-The easiest way to setting up giver is to use a WalletV3 account. This type of account is used in the venom wallet. So you can create a new account with venom extension and use it as a giver.
 
 ## `locklift.config.ts`
 
@@ -65,7 +60,7 @@ Directory for tests.
 
 After setting up the project with `yo venom-scaffold`, you should already have a project ready for testing and deployment.
 
-First, let's check configs at `locklift.config.ts` [file](#lockliftconfigts). Be sure that you provide the correct settings for all required networks and [givers](#giversettings).
+First, let's check configs at `locklift.config.ts` [file](#lockliftconfigts). Be sure that you provide the correct settings for all required networks.
 
 Further, let's verify the token's settings in `scripts/00-deploy.ts` file:
 

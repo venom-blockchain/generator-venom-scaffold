@@ -2,14 +2,18 @@ import * as Generator from "yeoman-generator";
 import { validateAddress } from "../../lib/base";
 
 interface Giver {
-  type: string;
   address: string;
   privateKey: string;
+}
+
+interface Signer {
   phrase: string;
+  amount: number;
 }
 
 interface NetworkConfig {
   giver: Giver;
+  signer: Signer;
   connection?: {
     group: string;
     type: string;
@@ -30,26 +34,29 @@ interface Answers {
 function questionsToSettingUpNetwork(network: string) {
   return [
     {
-      name: `type`,
-      type: "list",
-      message: `Select giver type (${network})`,
-      choices: ["WalletV3", "GiverWallet"],
-    },
-    {
-      name: `address`,
+      name: `giverAddress`,
       type: "input",
       message: `Provide giver address (${network})`,
       validate: validateAddress,
+      default: "0:0000000000000000000000000000000000000000000000000000000000000000",
     },
     {
-      name: `phrase`,
+      name: `giverPrivateKey`,
       type: "password",
-      message: `Enter giver's seed phrase (${network})`,
+      message: `Enter giver's private key (${network})`,
+      default: "0000000000000000000000000000000000000000000000000000000000000000",
     },
     {
-      name: `privateKey`,
+      name: `signerPhrase`,
       type: "password",
-      message: `Enter giver's privateKey (${network})`,
+      message: `Provide signer's seed phrase (${network})`,
+      default: "phrase",
+    },
+    {
+      name: `signerKeysAmount`,
+      type: "number",
+      message: `Provide amount of signer's key pairs to generate (${network})`,
+      default: 20,
     },
   ];
 }
@@ -114,15 +121,27 @@ export default class extends Generator {
     const mainAnswers = await this.prompt(questions);
 
     const networkAnswers = new Map<string, NetworkConfig>();
+
     if (setupLocklift.setupLocklift) {
-      for await (const network of ["testnet", "mainnet"]) {
-        const giverConfigAnswers = await this.prompt(questionsToSettingUpNetwork(network));
+      let networks: string[] = [];
+      switch (mainAnswers.blockchain) {
+        case "venom":
+          networks = ["test"];
+          break;
+        case "everscale":
+          networks = ["test", "main"];
+          break;
+      }
+      for await (const network of networks) {
+        const answers = await this.prompt(questionsToSettingUpNetwork(network));
         networkAnswers.set(network, {
           giver: {
-            address: giverConfigAnswers.address,
-            type: giverConfigAnswers.type,
-            privateKey: giverConfigAnswers.privateKey,
-            phrase: giverConfigAnswers.phrase,
+            address: answers.giverAddress,
+            privateKey: answers.giverPrivateKey,
+          },
+          signer: {
+            phrase: answers.signerPhrase,
+            amount: answers.signerKeysAmount,
           },
         });
       }
@@ -138,30 +157,26 @@ export default class extends Generator {
   }
 
   writing() {
-    const giverTypes = [];
-
-    this.answers.networks.forEach((v: NetworkConfig) => {
-      giverTypes.indexOf(v.giver.type) === -1 && giverTypes.push(v.giver.type);
-    });
     const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
-
     this.fs.copyTpl(this.templatePath(lockliftConfigPath), this.destinationPath("locklift.config.ts"), {
       compiler: this.answers.compiler,
       linker: this.answers.linker,
       networks: this.answers.networks,
-      giverTypes: giverTypes,
       blockchain: this.answers.blockchain,
+      externalContracts: this.options.externalContracts,
     });
-    this.fs.copy(this.templatePath("giverSettings/"), this.destinationPath("./giverSettings"));
 
     const pkgJson = {
       devDependencies: {
         "@types/chai": "^4.3.4",
         "@types/mocha": "^10.0.1",
-        chai: "^4.3.6",
-        "everscale-standalone-client": "^2.1.5",
-        locklift: "^2.4.4",
+        "@types/node": "^18.16.0",
+        chai: "^4.3.7",
+        "everscale-standalone-client": "^2.1.18",
+        locklift: "^2.5.2",
+        prettier: "^2.8.8",
         "ts-mocha": "^10.0.0",
+        typescript: "^4.7.4",
       },
     };
     this.fs.extendJSON(this.destinationPath("package.json"), pkgJson);
