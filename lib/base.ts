@@ -209,7 +209,7 @@ export default class BaseGenerator extends Generator {
 export function validateAddress(input: string): boolean {
   // valid if input is empty
   if (input.length == 0) {
-    return true;
+    return false;
   }
   if (/^0:([A-Fa-f0-9]{64})/g.test(input)) {
     return true;

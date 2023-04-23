@@ -22,8 +22,7 @@ export default class TIP41 extends BaseGenerator {
       this.initialize();
     }
     if (this.options.locklift) {
-      this.options.lockliftConfigPath = this.templatePath("locklift.config.ts");
-      console.log("lockliftConfigPath", this.options.lockliftConfigPath);
+      this.options.externalContracts = "tip4";
       this.composeWith(require.resolve("../locklift"), this.options);
     }
     this.pkgJSONGenerator = new PkgJSONGenerator(this.args, this.options);
@@ -37,7 +36,7 @@ export default class TIP41 extends BaseGenerator {
 
     const pkgJson = {
       devDependencies: {
-        "@types/node": "^18.11.10",
+        "@types/node": "^18.16.0",
         prettier: "^2.8.0",
         typescript: "^4.7.4",
       },
@@ -53,11 +52,9 @@ export default class TIP41 extends BaseGenerator {
           "run:local-node": "docker run --rm -d --name local-node -e USER_AGREEMENT=yes -p 80:80 tonlabs/local-node",
           "stop:local-node": "docker stop local-node",
           "test:local": "npx locklift test --network local",
-          "test:testnet": "npx locklift test --network testnet",
-          "deploy:testnet": "npx locklift run --network testnet --script scripts/0-deploy-collection.ts",
-          "mint:testnet": "npx locklift run --network testnet --script scripts/1-mint-nft.ts",
-          "deploy:mainnet": "npx locklift run --network mainnet --script scripts/0-deploy-collection.ts",
-          "mint:mainnet": "npx locklift run --network mainnet --script scripts/1-mint-nft.ts",
+          "test:testnet": "npx locklift test --network test",
+          "deploy:testnet": "npx locklift run --network test --script scripts/0-deploy-collection.ts",
+          "mint:testnet": "npx locklift run --network test --script scripts/1-mint-nft.ts",
         },
         devDependencies: {
           "@types/prompts": "^2.4.1",
@@ -82,7 +79,12 @@ export default class TIP41 extends BaseGenerator {
 
   async end() {
     if (this.options.locklift) {
-      await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
+      const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
+      const result = this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
+      if (result.status !== 0) {
+        console.error(`Error running prettier: ${result.error}`);
+      }
+      this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
     const readmePath = this._findRelativePath(this.env.cwd, this.destinationPath("README.md"));
 

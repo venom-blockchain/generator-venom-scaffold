@@ -143,6 +143,7 @@ export default class TIP3 extends BaseGenerator {
       this.initialize();
     }
     if (this.options.locklift) {
+      this.options.externalContracts = "tip3";
       this.composeWith(require.resolve("../locklift"), this.options);
     }
     this.pkgJSONGenerator = new PkgJSONGenerator(this.args, this.options);
@@ -179,7 +180,7 @@ export default class TIP3 extends BaseGenerator {
     const pkgJson = {
       devDependencies: {
         "@broxus/contracts": "^1.0.4",
-        "@types/node": "^18.11.10",
+        "@types/node": "^18.16.0",
         prettier: "^2.8.0",
         typescript: "^4.7.4",
       },
@@ -198,13 +199,10 @@ export default class TIP3 extends BaseGenerator {
           "run:local-node": "docker run --rm -d --name local-node -e USER_AGREEMENT=yes -p 80:80 tonlabs/local-node",
           "stop:local-node": "docker stop local-node",
           "test:local": "npx locklift test --network local",
-          "test:testnet": "npx locklift test --network testnet",
-          "deploy:testnet": "npx locklift run --network testnet --script scripts/00-deploy.ts",
-          "deploy:mainnet": "npx locklift run --network mainnet --script scripts/00-deploy.ts",
-          "mint:testnet": "npx locklift run --network testnet --script scripts/01-mint.ts",
-          "mint:mainnet": "npx locklift run --network mainnet --script scripts/01-mint.ts",
-          "burn:testnet": "npx locklift run --network testnet --script scripts/02-burn.ts",
-          "burn:mainnet": "npx locklift run --network mainnet --script scripts/02-burn.ts",
+          "test:testnet": "npx locklift test --network test",
+          "deploy:testnet": "npx locklift run --network test --script scripts/00-deploy.ts",
+          "mint:testnet": "npx locklift run --network test --script scripts/01-mint.ts",
+          "burn:testnet": "npx locklift run --network test --script scripts/02-burn.ts",
         },
         devDependencies: {
           "@types/prompts": "^2.4.1",
@@ -231,6 +229,11 @@ export default class TIP3 extends BaseGenerator {
 
   async end() {
     if (this.options.locklift) {
+      const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
+      const result = this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
+      if (result.status !== 0) {
+        console.error(`Error running prettier: ${result.error}`);
+      }
       await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
 
