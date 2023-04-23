@@ -69,7 +69,9 @@ export default class SampleGenerator extends BaseGenerator {
 
   async end() {
     if (this.options.locklift) {
-      await this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
+      const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
+      this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
+      this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
     const readmePath = this._findRelativePath(this.env.cwd, this.destinationPath("README.md"));
 

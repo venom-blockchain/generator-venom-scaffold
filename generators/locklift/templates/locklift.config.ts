@@ -28,7 +28,7 @@ const locklift: import("locklift").Locklift<FactorySource>;
 
   <% if (externalContracts === "tip3") { %>
   externalContracts: {
-  "node_modules/broxus-ton-tokens-contracts/build": ["TokenRoot", "TokenWallet"]
+  "node_modules/tip3/build": ["TokenRoot", "TokenWallet"]
   },
   <% } else if (externalContracts === "tip4") { %>
   externalContracts: {

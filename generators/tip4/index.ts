@@ -80,10 +80,8 @@ export default class TIP41 extends BaseGenerator {
   async end() {
     if (this.options.locklift) {
       const lockliftConfigPath = this.options.lockliftConfigPath || "locklift.config.ts";
-      const result = this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
-      if (result.status !== 0) {
-        console.error(`Error running prettier: ${result.error}`);
-      }
+      
+      this.spawnCommandSync("npx", ["prettier", "--write", lockliftConfigPath]);
       this.spawnCommandSync(this.pkgJSONGenerator.pkgManager, ["run", "build"]);
     }
     const readmePath = this._findRelativePath(this.env.cwd, this.destinationPath("README.md"));
